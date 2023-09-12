@@ -5,6 +5,8 @@ import 'package:world_time_app/pages/loading.dart';
 
 void main() {
   runApp( MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(brightness: Brightness.dark),
     initialRoute: '/',
     routes: {
       '/': (context) => Loading(),
