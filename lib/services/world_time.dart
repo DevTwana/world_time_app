@@ -21,12 +21,12 @@ class WorldTime {
       DateTime now = DateTime.parse(datetime);
       now = now.add(Duration(hours: int.parse(offset)));
       // time = now.toString();
-
+      print('nowww $now');
       time = DateFormat().add_jm().format(now);
-      //isDaytime = int.parse(time) > 18.0 ? false:true;
-      //print('daytime');
-      //print(isDaytime);
-      //print(time);
+      isDaytime = now.hour > 6 && now.hour < 20  ? true : false;
+      // we use now variable because it is 24 hour format
+      print('hour of now');
+      print(now.hour);
     }catch (e){
       print('caught error: $e');
       time = 'could not get time data';
