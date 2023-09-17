@@ -12,12 +12,14 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    data = ModalRoute.of(context)!.settings.arguments as Map;
-    print('these are the times');
-    print(data);
+    data = data.isNotEmpty
+        ? data
+        : ModalRoute.of(context)!.settings.arguments as Map;
 
     String bgImage = data['isDaytime'] ? 'day.png' : 'night.png';
     Color bgColor = data['isDaytime'] ? Colors.blue : Colors.indigo;
+    Color textColor = data['isDaytime'] ? Colors.blue : Colors.indigo;
+    Color? btnColor = data['isDaytime'] ? Colors.grey[800] : Colors.grey[300];
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -30,21 +32,31 @@ class _HomeState extends State<Home> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 120.0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 100.0, 0, 0),
           child: Column(
             children: [
               TextButton.icon(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/location');
+                onPressed: () async {
+                  dynamic result =
+                      await Navigator.pushNamed(context, '/location');
+                  setState(() {
+                    data = {
+                      'time': result['time'],
+                      'location': result['location'],
+                      'isDaytime': result['isDaytime'],
+                      'flag': result['flag']
+                    };
+                  });
                 },
                 icon: Icon(
-                  Icons.edit_location,
-                  color: Colors.grey[300],
+                  Icons.location_on,
+                  color: btnColor,
                 ),
                 label: Text(
-                  'Edit Location',
+                  'Choose Location',
                   style: TextStyle(
-                    color: Colors.grey[300],
+                    color: btnColor,
+                    fontSize: 18.0
                   ),
                 ),
               ),
@@ -54,10 +66,18 @@ class _HomeState extends State<Home> {
                 children: [
                   Text(
                     data['location'],
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 28.0,
                         letterSpacing: 2.0,
-                        color: Colors.white),
+                        color: textColor,
+                        fontWeight: FontWeight.bold,
+                        shadows: const <Shadow>[
+                          Shadow(
+                            offset: Offset(0.0, 0.0),
+                            blurRadius: 1.0,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          )
+                        ]),
                   )
                 ],
               ),
@@ -66,7 +86,14 @@ class _HomeState extends State<Home> {
               ),
               Text(
                 data['time'],
-                style: TextStyle(fontSize: 66.0, letterSpacing: 2.0, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 66.0, letterSpacing: 2.0, color: textColor,  shadows: const <Shadow>[
+                  Shadow(
+                    offset: Offset(0.0, 0.0),
+                    blurRadius: 1.0,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  )
+                ]),
               )
             ],
           ),
